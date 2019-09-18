@@ -1,0 +1,52 @@
+plugins {
+  id 'java'
+  id 'com.google.cloud.tools.jib' version '1.5.0'
+	id "org.springframework.boot" version "2.1.5.RELEASE"
+}
+
+apply plugin: "io.spring.dependency-management"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+	jcenter()
+	mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:+"
+    }
+}
+
+dependencies {
+	implementation "com.google.code.gson:gson:+"
+	implementation "com.google.guava:guava:+"
+	implementation "org.springframework.boot:spring-boot-starter-web"
+	
+// // aws sdk
+//     implementation platform('com.amazonaws:aws-java-sdk-bom:+')
+//     implementation 'com.amazonaws:aws-java-sdk-s3'
+
+// // aws sdk 2
+//     implementation platform('software.amazon.awssdk:bom:+')
+//     implementation 'software.amazon.awssdk:s3'
+//     implementation 'software.amazon.awssdk:sns'
+//     implementation 'software.amazon.awssdk:sqs'
+}
+
+jib {
+  from {
+    image = "openjdk:8-alpine"
+//    image = "amazonlinux:2"
+  }
+	container {
+		ports = ["5000"]
+		entrypoint = ["/bin/sh", "/run.sh"]
+	}
+}
+
+// configurations {
+//     all*.exclude module : 'spring-boot-starter-logging'
+// }
